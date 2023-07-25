@@ -42,10 +42,10 @@ if size(cTracks,1)==1
 end
 
 rMark = 1000/65/2; % 1/4 um in TIRF-SIM resolution
-keyBegin = 'b';
-keyEnd = 'e';
+keyBegin = 'a';
+keyEnd = 's';
 % tags
-tags = struct('name',{'ring','cluster'},'tag',{1,2},'key',{'q','c'},'marker',{'o','x'});
+tags = struct('name',{'ring','cluster'},'tag',{1,2},'key',{'c','v'},'marker',{'o','x'});
 initCheck = 'ag4'; % (a)ll,(s)nakes, (d)istances, (g)rid, (4)88, (5)60
 
 caption = 'TIRF-SIM annotation';
@@ -233,7 +233,7 @@ tagTxt = [];
 for i = 1:length(tags)
     tagTxt = sprintf('%s, %s - %s',tagTxt,tags(i).key,tags(i).name);
 end
-uicontrol(f,'Style','text','FontSize',7,'String',sprintf('Up, Down / Left, Right - select track / frame\nHome / End - select first / last frame\nCtrl+click / Delete / x / m - create / delete / split / merge track\nShift + Arrows - shift cut-out\n%s / %s - set begin / end of track\nspace / n - change status / next unsolved track\nTags: %s\na / s / d / g / 4 / 5 - all / snakes / distances / grid / 488 / 560\nClick - select nearest track / shift cutout',keyBegin,keyEnd,tagTxt(2:end)),'Units','normalized','Position',[0.64 0.89 0.16 0.1],'Max',2);
+uicontrol(f,'Style','text','FontSize',7,'String',sprintf('Up, Down / d, f - select track / frame\nHome / End - select first / last frame\nCtrl+click / Delete / x / z - create / delete / split / merge track\nq / w / e / r - shift cut-out\n%s / %s - set begin / end of track\nspace / n - change status / next unsolved track\nTags: %s\nh / j / k / l / 4 / 5 - all / snakes / distances / grid / 488 / 560\nClick - select nearest track / shift cutout',keyBegin,keyEnd,tagTxt(2:end)),'Units','normalized','Position',[0.64 0.89 0.16 0.1],'Max',2);
 bSave = uicontrol(f,'Style','pushbutton','String','Save changes','Units','normalized','Position',[0.8 0.96 .08 .03],'Enable','off','Callback',@saveTrks);
 chAll = uicontrol(f,'Style','checkbox','String','Show all tracks','Value',any(initCheck=='a'),'Units','normalized','Position',[0.8 0.945 .08 .015],'Callback',@posChange);
 chSnake = uicontrol(f,'Style','checkbox','String','Show snakes','Value',any(initCheck=='s'),'Units','normalized','Position',[0.8 0.93 .08 .015],'Callback',@posChange);
@@ -411,7 +411,7 @@ function lstChange(obj,~)
 end
 function keyPress(~,e)
     fi = frm(idx)-trk(idx).start+1;
-    if length(e.Modifier)==1 && strcmpi(e.Modifier{1},'shift') && contains(e.Key,'arrow')
+    % if length(e.Modifier)==1 && strcmpi(e.Modifier{1},'shift') && contains(e.Key,'arrow')
         if fi==0
             trk(idx).start = trk(idx).start-1;
             trk(idx).x = [trk(idx).x(1),trk(idx).x];
@@ -427,13 +427,13 @@ function keyPress(~,e)
         end
         if fi>=1 && fi<=length(trk(idx).x)
             switch e.Key
-                case 'leftarrow'
+                case 'q'
                     trk(idx).x(fi) = trk(idx).x(fi) - 1;
-                case 'rightarrow'
+                case 'r'
                     trk(idx).x(fi) = trk(idx).x(fi) + 1;
-                case 'uparrow'
+                case 'e'
                     trk(idx).y(fi) = trk(idx).y(fi) - 1;
-                case 'downarrow'
+                case 'w'
                     trk(idx).y(fi) = trk(idx).y(fi) + 1;
             end
             trk(idx).status = 1;
@@ -442,12 +442,12 @@ function keyPress(~,e)
             calcCirc(idx,frm(idx));
             lst.String{idx} = listTxt(idx);
         end
-    else
+    % else
         switch e.Key
-            case 'leftarrow'
+            case 'd'
                 sld.Value = max(sld.Value-1,sld.Min);
                 sldChange(sld);
-            case 'rightarrow'
+            case 'f'
                 sld.Value = min(sld.Value+1,sld.Max);
                 sldChange(sld);
             case 'home'
@@ -456,10 +456,10 @@ function keyPress(~,e)
             case 'end'
                 sld.Value = trk(idx).start+numel(trk(idx).x)-1;
                 sldChange(sld);
-            case 'uparrow'
+            case 't'
                 lst.Value = max(idx-1,1);
                 lstChange(lst);
-            case 'downarrow'
+            case 'y'
                 lst.Value = min(idx+1,length(trk));
                 lstChange(lst);
             case 'n'
@@ -482,16 +482,16 @@ function keyPress(~,e)
                 changed = true;
                 lst.String{idx} = listTxt(idx);
                 posChange;
-            case 'a'
+            case 'h'
                 chAll.Value = 1-chAll.Value;
                 posChange;
-            case 'd'
+            case 'j'
                 chDist.Value = 1-chDist.Value;
                 posChange;
-            case 's'
+            case 'k'
                 chSnake.Value = 1-chSnake.Value;
                 posChange;
-            case 'g'
+            case 'l'
                 chGrid.Value = 1-chGrid.Value;
                 gridChange;
             case '4'
@@ -639,7 +639,7 @@ function keyPress(~,e)
                 posChange;
             end
         end
-    end
+    % end
     if changed
         bSave.Enable = 'on';
     end
