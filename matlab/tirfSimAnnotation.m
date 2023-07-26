@@ -427,13 +427,13 @@ function keyPress(~,e)
         end
         if fi>=1 && fi<=length(trk(idx).x)
             switch e.Key
-                case 'q'
+                case {'q' ,'leftarrow'}
                     trk(idx).x(fi) = trk(idx).x(fi) - 1;
-                case 'r'
+                case {'r' , 'rightarrow'}
                     trk(idx).x(fi) = trk(idx).x(fi) + 1;
-                case 'e'
+                case {'e' , 'uparrow'}
                     trk(idx).y(fi) = trk(idx).y(fi) - 1;
-                case 'w'
+                case {'w' , 'downarrow'}
                     trk(idx).y(fi) = trk(idx).y(fi) + 1;
             end
             trk(idx).status = 1;
