@@ -444,6 +444,10 @@ function keyPress(~,e)
         end
     % else
         switch e.Key
+            case 'o'
+                zoom(axi, 'toggle')
+            case 'p'
+                pan(axi, 'toggle')
             case 'd'
                 sld.Value = max(sld.Value-1,sld.Min);
                 sldChange(sld);
